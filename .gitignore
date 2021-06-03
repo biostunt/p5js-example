@@ -1,0 +1,8 @@
+#folders
+dist
+node_modules
+.cache
+
+
+#lock files
+*.lock
