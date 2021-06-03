@@ -1,4 +1,6 @@
-import DrawEngine from 'p5';
+import DrawEngine, { Vector } from 'p5';
+import { Ball } from './objects/Ball';
+import { IObject } from './objects/object.instance';
 
 interface SketchOptions {
     canvas : {
@@ -20,7 +22,7 @@ export default class Sketch {
     public static options : SketchOptions = {
         canvas: {
             frameWidth: 700,
-            frameHeight: 500,
+            frameHeight: 400,
             renderer: 'webgl',
             parentId: '#app',
         },
@@ -33,6 +35,8 @@ export default class Sketch {
      */
     private _engine!: DrawEngine;
 
+    private objects: Array<IObject> = [];
+
     constructor() {}
 
     /**
@@ -41,6 +45,7 @@ export default class Sketch {
      */
     public init(engine: DrawEngine): void {
         this._engine = engine;
+        this.initObjects();
         engine.setup = this.setup.bind(this);
         engine.draw = this.draw.bind(this);
     }
@@ -51,6 +56,7 @@ export default class Sketch {
     public setup(): void {
         const { frameRate, background } = Sketch.options;
         this.initCanvas(this._engine);
+        this.objects.forEach(object => object.setup());
         this._engine.background(background);
         this._engine.frameRate(frameRate);
     }
@@ -62,15 +68,11 @@ export default class Sketch {
         const { background } = Sketch.options;
         const engine = this._engine;
         engine.background(background);
-
-        
-        engine.fill('orange');
-        engine.noStroke();
-        engine.ellipse(this.x, this.y, 20, 20);
-        engine.pop();
-
-        this.x++;
-        this.y++;
+        this.objects.forEach(object => {
+            engine.push();
+            object.draw();
+            engine.pop();
+        })
     }
 
     /**
@@ -85,5 +87,15 @@ export default class Sketch {
         return canvas;
     }
 
-    private initObjects()
+    private initObjects(): void {
+        const diameter = Sketch.options.canvas.frameWidth / 20;
+        const { x, y, jumpHeight } = {
+            x: (-1 * Sketch.options.canvas.frameWidth / 2) + (diameter),
+            y: (Sketch.options.canvas.frameHeight / 2) - (diameter / 2),
+            jumpHeight: Sketch.options.canvas.frameHeight * 0.75
+        };
+        console.log(jumpHeight);
+        let ball = new Ball({ startPos: new Vector().set(x, y), diameter, jumpHeight }, this._engine);;
+        this.objects.push(ball);
+    }
 }
