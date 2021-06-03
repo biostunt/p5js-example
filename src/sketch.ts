@@ -28,9 +28,6 @@ export default class Sketch {
         frameRate: 60,
     }
 
-    x = 0;
-    y = 0;
-
     /**
      * Will Initialized when init
      */
@@ -65,6 +62,8 @@ export default class Sketch {
         const { background } = Sketch.options;
         const engine = this._engine;
         engine.background(background);
+
+        
         engine.fill('orange');
         engine.noStroke();
         engine.ellipse(this.x, this.y, 20, 20);
@@ -85,4 +84,6 @@ export default class Sketch {
         canvas.parent(parentId);
         return canvas;
     }
+
+    private initObjects()
 }
