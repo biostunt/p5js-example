@@ -1,5 +1,6 @@
 import DrawEngine, { Vector } from 'p5';
-import { Ball } from './objects/Ball';
+import { Background } from './objects/Background';
+import { Player } from './objects/Player';
 import { IObject } from './objects/object.instance';
 
 interface SketchOptions {
@@ -30,6 +31,10 @@ export default class Sketch {
         frameRate: 60,
     }
 
+    public static imagePool = {
+        cloud: null
+    }
+
     /**
      * Will Initialized when init
      */
@@ -46,14 +51,24 @@ export default class Sketch {
     public init(engine: DrawEngine): void {
         this._engine = engine;
         this.initObjects();
+        engine.preload = this.preload.bind(this);
         engine.setup = this.setup.bind(this);
         engine.draw = this.draw.bind(this);
+    }
+
+    /**
+     * Executes before P5 setup method 
+     * also before @see this.setup
+     */
+    public preload(): void {
+        this.objects.forEach((object) => object.preload());
     }
 
     /**
      * Engine setup function
      */
     public setup(): void {
+        console.log(Sketch.imagePool)
         const { frameRate, background } = Sketch.options;
         this.initCanvas(this._engine);
         this.objects.forEach(object => object.setup());
@@ -66,13 +81,14 @@ export default class Sketch {
      */
     public draw(): void {
         const { background } = Sketch.options;
+        const { objects } = this;
         const engine = this._engine;
         engine.background(background);
-        this.objects.forEach(object => {
+        for (let i = 0; i < objects.length; i++) {
             engine.push();
-            object.draw();
+            objects[i].draw();
             engine.pop();
-        })
+        }
     }
 
     /**
@@ -87,15 +103,15 @@ export default class Sketch {
         return canvas;
     }
 
+    /**
+     * That feature will be deprecated in future.
+     * But now creates object instances for scenes
+     */
     private initObjects(): void {
-        const diameter = Sketch.options.canvas.frameWidth / 20;
-        const { x, y, jumpHeight } = {
-            x: (-1 * Sketch.options.canvas.frameWidth / 2) + (diameter),
-            y: (Sketch.options.canvas.frameHeight / 2) - (diameter / 2),
-            jumpHeight: Sketch.options.canvas.frameHeight * 0.75
-        };
-        console.log(jumpHeight);
-        let ball = new Ball({ startPos: new Vector().set(x, y), diameter, jumpHeight }, this._engine);;
-        this.objects.push(ball);
-    }
+        this.objects.push(new Player(this._engine));
+        this.objects.push(new Background(this._engine));
+        
+        //this line required for layer definition
+        this.objects.sort((v1, v2) => v1.layer - v2.layer);
+    }   
 }

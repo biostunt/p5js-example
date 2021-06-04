@@ -1,8 +1,11 @@
 import DrawEngine, { Image } from 'p5';
 import { IObject } from "./object.instance";
+import { loadImageAsync } from './object.service';
 
 export class Background implements IObject {
     
+    public layer: number = 1;
+
     constructor(private readonly engine: DrawEngine){}
 
     /**
@@ -23,9 +26,12 @@ export class Background implements IObject {
     private sunMap!: Array<number>;
     private sunRadius: number = 50;
 
-    
+    public preload(): void {
+        this.cloudImage = this.engine.loadImage('http://192.168.0.102:3000/images/cloud.png');
+    }
 
     public setup(): void {
+        console.log(this.cloudImage);
         this.setupSky();
         this.setupGrass();
     }
@@ -37,13 +43,17 @@ export class Background implements IObject {
     }
 
     private setupSky(): void {
-        //this.cloudImage = this.engine.loadImage('../assets/cloud.jpg', () => console.log('success'), () => console.log('fail'));
+        this.cloudImage.loadPixels();
     }
 
     private drawSky(): void {
         const { engine } = this;
+        const { width, height } = engine;
         engine.push();
-
+        engine.noStroke();
+        engine.fill(96, 154, 255);
+        engine.rect(-1 * width / 2, -1 * height / 2, width, height / 2);
+        engine.image(this.cloudImage, 0, 0, 100, 60);
         engine.pop();
 
     }
