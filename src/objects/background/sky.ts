@@ -69,7 +69,7 @@ export class Sky extends ObjectModel {
         this.clouds.forEach((pos, i) => {
             pos.x--;
             pos.y += engine.frameCount % 10 == 0 ? engine.random(-2, 2) : 0;
-            pos.y += pos.y <= (-1 * engine.height / 2) + cloudHeight ? 4 : 0;
+            pos.y += pos.y <= (-1 * engine.height / 2) + cloudHeight ? 1 : 0;
             if (pos.x <= -1 * (engine.width / 2 + this.cloudWidth)) {
                 let np = this.generateCloudPosition(i);
                 pos.x = np.x;
