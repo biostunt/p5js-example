@@ -14,6 +14,7 @@ export class Sun extends ObjectModel {
         const { engine, sunRadius } = this;
         engine.noStroke()
         engine.fill('yellow');
-        engine.circle(engine.width / 2,-1 * engine.height / 2, sunRadius * 2);
+        let currentRadius = engine.frameCount % 120 < 60 ? sunRadius : sunRadius + 20;
+        engine.circle(engine.width / 2,-1 * engine.height / 2, currentRadius * 2);
     }
 }

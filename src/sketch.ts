@@ -2,6 +2,7 @@ import DrawEngine, { Vector } from 'p5';
 import { Background } from './objects/background';
 import { Player } from './objects/player';
 import {  ObjectModel } from './objects/object.instance';
+import { Cactuses } from './objects/cactuses';
 
 interface SketchOptions {
     canvas : {
@@ -105,7 +106,7 @@ export default class Sketch {
     private initObjects(): void {
         this.objects.push(new Player(this._engine));
         this.objects.push(new Background(this._engine));
-        
+        this.objects.push(new Cactuses(this._engine));
         //this line required for layer definition
         this.objects.sort((v1, v2) => v1.layer - v2.layer);
     }   
