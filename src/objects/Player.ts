@@ -1,11 +1,9 @@
 import DrawEngine, { Image, Vector } from 'p5';
-import { IObject } from "./object.instance";
+import { IObject, ObjectModel } from "./object.instance";
 
 
 
-export class Player implements IObject {
-    
-    public layer: number = 9999;
+export class Player extends ObjectModel {
 
     public currentPos: Vector;
     public startPos: Vector;
@@ -22,7 +20,10 @@ export class Player implements IObject {
     private playerHeight: number;
 
 
-    constructor( private readonly engine: DrawEngine) {}
+    constructor(engine: DrawEngine) {
+        super(engine, 9999);
+    }
+    public layer: number;
 
     public preload(): void {
         this.playerImage = this.engine.loadImage('http://localhost:3000/images/player.gif');
@@ -37,7 +38,6 @@ export class Player implements IObject {
         let y = (engine.height / 2) - (this.playerWidth * 2);
         this.startPos = new Vector().set(x, y)
         this.currentPos = new Vector().set(x, y);
-        console.log(this.startPos);
         engine.mouseClicked = this.onMouseClicked.bind(this);
     }
 

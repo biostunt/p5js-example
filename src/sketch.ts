@@ -1,7 +1,7 @@
 import DrawEngine, { Vector } from 'p5';
-import { Background } from './objects/Background';
-import { Player } from './objects/Player';
-import { IObject } from './objects/object.instance';
+import { Background } from './objects/background';
+import { Player } from './objects/player';
+import {  ObjectModel } from './objects/object.instance';
 
 interface SketchOptions {
     canvas : {
@@ -31,16 +31,12 @@ export default class Sketch {
         frameRate: 60,
     }
 
-    public static imagePool = {
-        cloud: null
-    }
-
     /**
      * Will Initialized when init
      */
     private _engine!: DrawEngine;
 
-    private objects: Array<IObject> = [];
+    private objects: Array<ObjectModel> = [];
 
     constructor() {}
 
@@ -68,7 +64,6 @@ export default class Sketch {
      * Engine setup function
      */
     public setup(): void {
-        console.log(Sketch.imagePool)
         const { frameRate, background } = Sketch.options;
         this.initCanvas(this._engine);
         this.objects.forEach(object => object.setup());
