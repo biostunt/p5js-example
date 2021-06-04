@@ -3,6 +3,7 @@ import { Grass } from './grass';
 import { Sky } from './sky';
 import { Sun } from './sun';
 import { ObjectModel } from "../object.instance";
+import { House } from './house';
 
 export class Background extends ObjectModel {
 
@@ -10,7 +11,7 @@ export class Background extends ObjectModel {
 
     constructor(engine: DrawEngine) {
         super(engine, 1);
-        const objects = [Sun, Sky, Grass];
+        const objects = [Sun, Sky, Grass, House];
         objects
             .forEach(obj => this.objects.push(new obj(engine)));
         this.objects.sort((v1, v2) => v1.layer - v2.layer);
