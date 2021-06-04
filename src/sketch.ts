@@ -3,6 +3,9 @@ import { Background } from './objects/background';
 import { Player } from './objects/player';
 import {  ObjectModel } from './objects/object.instance';
 import { Cactuses } from './objects/cactuses';
+import { CollisionManager } from './managers/collision-manager';
+import { Score } from './objects/score';
+import { StateManager } from './managers/state-manager';
 
 interface SketchOptions {
     canvas : {
@@ -39,6 +42,9 @@ export default class Sketch {
 
     private objects: Array<ObjectModel> = [];
 
+    private player!: Player;
+    private cactuses!: Cactuses;
+
     constructor() {}
 
     /**
@@ -70,6 +76,7 @@ export default class Sketch {
         this.objects.forEach(object => object.setup());
         this._engine.background(background);
         this._engine.frameRate(frameRate);
+        StateManager.calculateScore((currentScore) => this._engine.frameCount % 60 == 0 ? currentScore + 1 : currentScore, 0);
     }
 
     /**
@@ -85,6 +92,13 @@ export default class Sketch {
             objects[i].draw();
             engine.pop();
         }
+        //collision checking
+        const { player, cactuses } = this;
+        const collision = CollisionManager.isInObjects(player, cactuses.getCactusesProps());
+
+        //state-manager
+        StateManager.tick();
+        //if (collision) engine.noLoop();
     }
 
     /**
@@ -104,10 +118,13 @@ export default class Sketch {
      * But now creates object instances for scenes
      */
     private initObjects(): void {
-        this.objects.push(new Player(this._engine));
+        this.player = new Player(this._engine)
+        this.cactuses = new Cactuses(this._engine);
+        this.objects.push(this.player);
+        this.objects.push(this.cactuses);
         this.objects.push(new Background(this._engine));
-        this.objects.push(new Cactuses(this._engine));
+        this.objects.push(new Score(this._engine));
         //this line required for layer definition
-        this.objects.sort((v1, v2) => v1.layer - v2.layer);
+        this.objects = this.objects.sort((v1, v2) => v1.layer - v2.layer);
     }   
 }
