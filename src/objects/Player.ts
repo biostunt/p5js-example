@@ -1,11 +1,11 @@
 import DrawEngine, { Image, Vector } from 'p5';
 import { IObject, ObjectModel } from "./object.instance";
+import { RigidBody } from './rigidbody.instance';
 
 
 
-export class Player extends ObjectModel {
+export class Player extends RigidBody {
 
-    public currentPos: Vector;
     public startPos: Vector;
 
     private jumpSpeed: number = 10;
@@ -16,12 +16,9 @@ export class Player extends ObjectModel {
     private shouldJump: boolean = false;
     
     private playerImage: Image;
-    private playerWidth: number;
-    private playerHeight: number;
-
 
     constructor(engine: DrawEngine) {
-        super(engine, 9999);
+        super(engine);
     }
     public layer: number;
 
@@ -31,38 +28,45 @@ export class Player extends ObjectModel {
 
     public setup(): void {
         const { engine } = this;
-        this.playerWidth = engine.width / 10;
-        this.playerHeight = engine.height / 4;
         this.jumpHeight = engine.height * 0.75;
-        let x = (-1 * engine.width / 2) + this.playerHeight / 2;
-        let y = (engine.height / 2) - (this.playerWidth * 2);
-        this.startPos = new Vector().set(x, y)
-        this.currentPos = new Vector().set(x, y);
-        engine.mouseClicked = this.onMouseClicked.bind(this);
+        let width = engine.width / 10;
+        let height = engine.height / 4;
+        let x = (-1 * engine.width / 2) + height / 2;
+        let y = (engine.height / 2) - (width * 2);
+        this.startPos = new Vector().set(x, y);
+        this.setProperties({
+            width,
+            height,
+            position: new Vector().set(x, y),
+            bodyType: 'ellipse'
+        })
+        engine.mousePressed = this.onMousePressed.bind(this);
     }
 
     public draw(): void {
-        const { engine,playerWidth, playerHeight, currentPos, playerImage } = this;
+        const { engine, playerImage } = this;
+        const { width, height, position } = this.props;
         engine.fill(255, 0, 0, 255);
         engine.noStroke();
-        engine.image(playerImage, currentPos.x, currentPos.y, playerWidth, playerHeight);
+        engine.image(playerImage, position.x, position.y, width, height);
         this.handleJump();
     }
 
-    private onMouseClicked(event?: Object) {
-        this.shouldJump = true;
+    private onMousePressed(event?: Object) {
+        this.shouldJump = true; 
     }
 
     private handleJump(): void {
         if (!this.shouldJump) return;
-        const { jumpDirection, jumpHeight, currentJumpSpeed, jumpSpeed, startPos, playerHeight } = this;
-        let x = this.currentPos.x;
-        let y = this.currentPos.y;
+        const { jumpDirection, jumpHeight, currentJumpSpeed, jumpSpeed, startPos } = this;
+        const { position, height } = this.props;
+        let x = position.x;
+        let y = position.y;
         const maxHeight = startPos.y - jumpHeight;
 
         y = jumpDirection == 'up' ? y - currentJumpSpeed : y + currentJumpSpeed;
         this.currentJumpSpeed = 1 + (Math.abs(maxHeight - y) / Math.abs(maxHeight)) * jumpSpeed * 0.85;
-        if (y <= (maxHeight + playerHeight))
+        if (y <= (maxHeight + height))
             this.jumpDirection = 'down';
         if (y >= startPos.y) {
             this.shouldJump = false;
@@ -70,8 +74,7 @@ export class Player extends ObjectModel {
             y = startPos.y;
             this.jumpDirection = 'up';
         }
-            
-        this.currentPos.set(x, y);
+        this.changePosition(new Vector().set(x, y))
     }
 
     

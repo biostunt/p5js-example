@@ -29,7 +29,7 @@ export class Cactuses extends ObjectModelContainer<Cactus> {
         const height = this.cactusHeight = engine.height / 5;
         this.objects.forEach((object, i) => {
             object.setCactusImage(this.cactusImage);
-            object.setProperties({ width, height, position: this.createStartPosition(i), bodyType: 'box' });
+            object.setProperties({ width, height, position: this.createStartPosition(i), bodyType: 'ellipse' });
         });
         super.setup();
         console.log(this.objects);

@@ -8,7 +8,8 @@ export interface RigidBodyProps {
     width: number,
     height: number;
     /**
-     * body type to check collision model
+     * body type to check collision model.
+     * @warning use only 'ellipse' type.
      */
     bodyType: RigidBodyType,
 }
@@ -17,8 +18,8 @@ export class RigidBody extends ObjectModel {
     
     protected props!: RigidBodyProps;
     
-    constructor(engine: DrawEngine, props?: RigidBodyProps, layer?: number) {
-        super(engine, 1000)
+    constructor(engine: DrawEngine, layer: number = 1000, props?: RigidBodyProps) {
+        super(engine, layer)
         this.props = props;
     }
     
