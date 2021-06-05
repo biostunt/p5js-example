@@ -9,7 +9,7 @@ export class Sky extends ObjectModel {
 
 
     private cloudCount: number = 5;
-    private cloudAssetUrl: string = 'http://192.168.0.102:3000/images/cloud.png';
+    private cloudAssetUrl: string = 'http://localhost:3000/images/cloud.png';
     
     private cloudImage: Image;
     private clouds: Array<Vector>;
@@ -36,7 +36,6 @@ export class Sky extends ObjectModel {
         this.clouds = new Array(cloudCount)
             .fill(1)
             .map((v, i) => this.generateCloudPosition(i));
-        console.log(this);
     }
 
     public draw(): void {

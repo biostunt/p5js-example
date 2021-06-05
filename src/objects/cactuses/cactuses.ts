@@ -6,7 +6,7 @@ import { Cactus } from './cactus';
 export class Cactuses extends ObjectModelContainer<Cactus> {
     
     private cactusCount: number = 2;
-    private cactusAssetUrl: string = 'http://192.168.0.102:3000/images/cactus.png';
+    private cactusAssetUrl: string = 'http://localhost:3000/images/cactus.png';
     private cactusImage: Image;
     
     private cactusWidth: number;
@@ -31,9 +31,7 @@ export class Cactuses extends ObjectModelContainer<Cactus> {
             object.setCactusImage(this.cactusImage);
             object.setProperties({ width, height, position: this.createStartPosition(i), bodyType: 'ellipse' });
         });
-        super.setup();
-        console.log(this.objects);
-        
+        super.setup();        
     }
     public draw(): void {
         super.draw();

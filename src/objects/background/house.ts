@@ -4,7 +4,7 @@ import { ObjectModel } from "../object.instance"
 
 export class House extends ObjectModel {
 
-    private imageAssetUrl: string = 'http://192.168.0.102:3000/images/house.png';
+    private imageAssetUrl: string = 'http://localhost:3000/images/house.png';
     private houseImage: Image;
     
     private pos: Vector;
