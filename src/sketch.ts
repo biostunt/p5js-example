@@ -98,7 +98,7 @@ export default class Sketch {
 
         //state-manager
         StateManager.tick();
-        //if (collision) engine.noLoop();
+        if (collision) engine.noLoop();
     }
 
     /**
